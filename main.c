@@ -484,6 +484,8 @@ void do_favfav(char *id)
 
 int main(int argc, char *argv[])
 {
+	srand((unsigned int)time(NULL));
+	
 	FILE *fp = fopen(".who2yakuna", "rb");
 	if(fp) {
 		fclose(fp);
