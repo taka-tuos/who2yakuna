@@ -162,7 +162,7 @@ void stream_event_update(struct json_object *jobj_from_string)
 	
 	fclose(fp2);
 	
-	if(prev_yakuna < 0) prev_yakuna = rand() % i;
+	if(prev_yakuna < 0) prev_yakuna = (rand() % (i + 1)) - 1;
 	
 	do {
 		char s2[512];
@@ -184,17 +184,18 @@ void stream_event_update(struct json_object *jobj_from_string)
 			printf("Burned by %s(%s) at %s\n", json_object_get_string(screen_name), json_object_get_string(display_name), s);
 			
 			char *id_s = json_object_get_string(id);
+			int yakuna = (rand() % (i + 1)) - 1;
 			while(1) {
-				int yakuna = rand() % i;
+				yakuna = (rand() % (i + 1)) - 1;
 				if(yakuna != prev_yakuna) {
 					prev_yakuna = yakuna;
 					break;
 				}
-				char s3[512];
-				sprintf(s3, "@%s\n%s",json_object_get_string(screen_name), replylist[yakuna]);
-				do_favfav(id_s);
-				do_toot(s3, id_s);
 			}
+			char s3[512];
+			sprintf(s3, "@%s\n%s",json_object_get_string(screen_name), replylist[yakuna]);
+			do_favfav(id_s);
+			do_toot(s3, id_s);
 			break;
 		}
 	} while(!feof(fp));
@@ -420,6 +421,10 @@ void do_toot(char *s, char *id)
 	curl_easy_setopt(hnd, CURLOPT_WRITEDATA, f);
 
 	ret = curl_easy_perform(hnd);
+	
+	/*long response_code;
+	curl_easy_getinfo(hnd, CURLINFO_RESPONSE_CODE, &response_code);
+	printf("%d\n", response_code);*/
 
 	fclose(f);
 	
@@ -462,6 +467,10 @@ void do_favfav(char *id)
 	curl_easy_setopt(hnd, CURLOPT_WRITEDATA, f);
 
 	ret = curl_easy_perform(hnd);
+	
+	/*long response_code;
+	curl_easy_getinfo(hnd, CURLINFO_RESPONSE_CODE, &response_code);
+	printf("%d\n", response_code);*/
 
 	fclose(f);
 	
