@@ -157,6 +157,7 @@ void stream_event_update(struct json_object *jobj_from_string)
 			if(*p == '\r' || *p == '\n') *p = 0;
 			p++;
 		}
+		if(replylist[i][0] == 0) break;
 		i++;
 	} while(!feof(fp2));
 	
@@ -172,6 +173,7 @@ void stream_event_update(struct json_object *jobj_from_string)
 			if(*p == '\r' || *p == '\n') *p = 0;
 			p++;
 		}
+		if(s2[0] == 0) break;	
 		char *adr = strstr(src2, s2);
 		if(adr) {
 			char s[256];
@@ -561,7 +563,7 @@ retry1:
 	
 	printf("who2yakunaサービスを開始しました\n");
 	
-	while(1) stream_thread_func(NULL);
+	stream_thread_func(NULL);
 
 	return 0;
 }
